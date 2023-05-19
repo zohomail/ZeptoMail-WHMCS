@@ -162,6 +162,7 @@ Team ZeptoMail";
                     "authorization: " . $settings["sendmailtoken"],
                     "cache-control: no-cache",
                     "content-type: application/json",
+                    "origin: Whmcs"
                 ],
             ]);
             $response = curl_exec($curl);
@@ -347,6 +348,7 @@ Team ZeptoMail";
                     "authorization: " . $settings["sendmailtoken"],
                     "cache-control: no-cache",
                     "content-type: application/json",
+                    "origin: Whmcs"
                 ],
             ]);
 
