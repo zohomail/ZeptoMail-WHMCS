@@ -45,12 +45,6 @@ class ZeptoMail implements SenderModuleInterface
                 "Description" =>
                     "<span style=\"font-size: 12px;\">Send Mail token of the relevant Mail Agent.</span>",
             ],
-            "bouncereturnpath" => [
-                "FriendlyName" => "Bounce Return Path",
-                "Type" => "text",
-                "Description" =>
-                    "<span style=\"font-size: 12px;\">Bounce email address configured for the relevant Mail Agent.</span>",
-            ],
             "fromemailaddress" => [
                 "FriendlyName" => "From Email Address",
                 "Type" => "text",
@@ -105,7 +99,6 @@ class ZeptoMail implements SenderModuleInterface
     {
         try {
             $sendmailtoken = $settings["sendmailtoken"];
-            $bounce_address = $settings["bouncereturnpath"];
             $from_email_address = $settings["fromemailaddress"];
             $from_name = $settings["fromname"];
             $mail_format = $settings["mail_format"];
@@ -168,6 +161,7 @@ Team ZeptoMail";
             $response = curl_exec($curl);
             curl_close($curl);
             $decodedData = json_decode($response, true);
+            $message = "";
             if (isset($decodedData["data"]) && !empty($decodedData["data"])) {
             } else {
                 if (
@@ -185,20 +179,17 @@ Team ZeptoMail";
 
                     if (
                         !empty($decodedData["error"]["details"][0]["target"]) &&
-                        $decodedData["error"]["details"][0]["target"] ===
-                            "bounce_address"
-                    ) {
-                        $message =
-                            "Configuration failed. Enter a valid bounce address and try again.";
-                    }
-
-                    if (
-                        !empty($decodedData["error"]["details"][0]["target"]) &&
                         $decodedData["error"]["details"][0]["target"] === "from"
                     ) {
                         $message =
                             "Configuration failed. Enter a valid From address and try again.";
                     }
+                    
+                    if ($message === ""){
+                        $message =
+                            "Configuration failed. Please conatct us through presales@zeptomail.com ";
+                    }
+
                     throw new \Exception($message);
                 }
             }
@@ -220,7 +211,6 @@ Team ZeptoMail";
         try {
             $mail_format = $settings["mail_format"];
             $postFields = [
-                "bounce_address" => $settings["bouncereturnpath"],
                 "from" => [
                     "address" => $message->getFromEmail(),
                     "name" => $message->getFromName(),
@@ -356,6 +346,7 @@ Team ZeptoMail";
             curl_close($curl);
             $decodedData = json_decode($response, true);
 
+            $message = "";
             if (isset($decodedData["data"]) && !empty($decodedData["data"])) {
             } else {
                 if (
@@ -373,19 +364,15 @@ Team ZeptoMail";
 
                     if (
                         !empty($decodedData["error"]["details"][0]["target"]) &&
-                        $decodedData["error"]["details"][0]["target"] ===
-                            "bounce_address"
-                    ) {
-                        $message =
-                            "Configuration failed. Enter a valid bounce address and try again.";
-                    }
-
-                    if (
-                        !empty($decodedData["error"]["details"][0]["target"]) &&
                         $decodedData["error"]["details"][0]["target"] === "from"
                     ) {
                         $message =
                             "Configuration failed. Enter a valid From address and try again.";
+                    }
+                    
+                    if ($message === ""){
+                        $message =
+                            "Mail sending failed. Please conatct us through presales@zeptomail.com ";
                     }
                     throw new \Exception($message);
                 }
