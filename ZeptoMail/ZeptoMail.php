@@ -41,7 +41,7 @@ class ZeptoMail implements SenderModuleInterface
             ],
             "sendmailtoken" => [
                 "FriendlyName" => "Send Mail Token",
-                "Type" => "text",
+                "Type" => "password",
                 "Description" =>
                     "<span style=\"font-size: 12px;\">Send Mail token of the relevant Mail Agent.</span>",
             ],
