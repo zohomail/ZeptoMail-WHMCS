@@ -29,33 +29,38 @@ class ZeptoMail implements SenderModuleInterface
     {
         return [
             "domain_name" => [
-                "FriendlyName" => "Host",
+                "FriendlyName" => "Hosted region",
                 "Type" => "dropdown",
                 "Options" => [
-                    "com" => "api.zeptomail.com",
-                    "eu" => "api.zeptomail.eu",
-                    "in" => "api.zeptomail.in",
-                    "com.cn" => "api.zeptomail.com.cn",
-                    "com.au" => "api.zeptomail.com.au",
+                    "com" => "zeptomail.zoho.com",
+                    "eu" => "zeptomail.zoho.eu",
+                    "in" => "zeptomail.zoho.in",
+                    "com.cn" => "zeptomail.zoho.com.cn",
+                    "com.au" => "zeptomail.zoho.com.au",
                 ],
+                "Description" => "<br><span style=\"font-size: 12px;\">The region where your Zoho account data reside.</span>",	
             ],
             "sendmailtoken" => [
                 "FriendlyName" => "Send Mail Token",
                 "Type" => "password",
                 "Description" =>
-                    "<span style=\"font-size: 12px;\">Send Mail token of the relevant Mail Agent.</span>",
+                    "<span style=\"font-size: 12px;\">Send Mail token generated in the relevant ZeptoMail Mail Agent.</span>",
             ],
             "fromemailaddress" => [
                 "FriendlyName" => "From Email Address",
                 "Type" => "text",
                 "Description" =>
-                    "<span style=\"font-size: 12px;\">The email address that will be used as the From address.</span>",
+                    "<span style=\"font-size: 12px;\">Emails from the plugin will be sent from this address.</span>",
+                "Default" => \WHMCS\Config\Setting::getValue('email'),
+		"ReadOnly" => true,
             ],
             "fromname" => [
                 "FriendlyName" => "From Name",
                 "Type" => "text",
                 "Description" =>
-                    "<span style=\"font-size: 12px;\">The sender name displayed on the emails sent.</span>",
+		"<span style=\"font-size: 12px;\">The display name shown on emails sent from the plugin.</span>",
+		"Default" => \WHMCS\Config\Setting::getValue('CompanyName'),
+		"ReadOnly" => true,
             ],
             "mail_format" => [
                 "FriendlyName" => "Mail Format",
@@ -64,6 +69,9 @@ class ZeptoMail implements SenderModuleInterface
                     "option1" => "Plaintext",
                     "option2" => "HTML",
                 ],
+                "Description" =>
+                "<br><span style=\"font-size: 12px;\">The default format of emails sent from the plugin.</span>",
+		"Default" => "option2",
             ],
         ];
     }
@@ -104,7 +112,6 @@ class ZeptoMail implements SenderModuleInterface
             $mail_format = $settings["mail_format"];
 
             $request_data = [
-                "bounce_address" => $bounce_address,
                 "from" => [
                     "address" => $from_email_address,
                     "name" => $from_name,
@@ -185,12 +192,16 @@ Team ZeptoMail";
                             "Configuration failed. Enter a valid From address and try again.";
                     }
                     
+                    if (isset($decodedData["error"]["details"][0]["message"])){
+		    	$message = $decodedData["error"]["details"][0]["message"];
+		    }
+                    
                     if ($message === ""){
                         $message =
                             "Configuration failed. Please conatct us through presales@zeptomail.com ";
                     }
 
-                    throw new \Exception($message);
+                    throw new \Exception('<span style="color: red;">' . $message . '</span>');
                 }
             }
         } catch (Exception $e) {
@@ -374,7 +385,7 @@ Team ZeptoMail";
                         $message =
                             "Mail sending failed. Please conatct us through presales@zeptomail.com ";
                     }
-                    throw new \Exception($message);
+                    throw new \Exception('<span style="color: red;">' . $message . '</span>');
                 }
             }
         } catch (Exception $e) {
