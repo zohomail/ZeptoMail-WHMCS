@@ -234,18 +234,10 @@ Team ZeptoMail";
             } elseif ($mail_format === "option2") {
                 $postFields["htmlbody"] = $message->getBody();
 
-                preg_match_all(
-                    "/<body\b[^>]*>(.*?)<\/body>/is",
-                    $postFields["htmlbody"],
-                    $bodyMatches
-                );
-
-                if (!empty($bodyMatches[1])) {
-                    $bodyContent = $bodyMatches[1][0];
-
+                if (!empty($postFields["htmlbody"])) {
                     preg_match_all(
                         '/<img[^>]+src="([^">]+)"/',
-                        $bodyContent,
+                        $postFields["htmlbody"],
                         $matches
                     );
                     $inlineImages = $matches[1];
