@@ -201,7 +201,7 @@ Team ZeptoMail";
                             "Configuration failed. Please conatct us through presales@zeptomail.com ";
                     }
 
-                    throw new \Exception('<span style="color: red;">' . $message . '</span>');
+                    throw new \Exception($message);
                 }
             }
         } catch (Exception $e) {
@@ -379,6 +379,10 @@ Team ZeptoMail";
                     ) {
                         $message =
                             "Configuration failed. Enter a valid From address and try again.";
+                    }
+			
+		    if (isset($decodedData["error"]["details"][0]["message"])){
+                        $message = $decodedData["error"]["details"][0]["message"];
                     }
                     
                     if ($message === ""){
