@@ -37,6 +37,8 @@ class ZeptoMail implements SenderModuleInterface
                     "in" => "zeptomail.zoho.in",
                     "com.cn" => "zeptomail.zoho.com.cn",
                     "com.au" => "zeptomail.zoho.com.au",
+		    "ca" => "zeptomail.zohocloud.ca",
+		    "sa" => "zeptomail.zoho.sa"
                 ],
                 "Description" => "<br><span style=\"font-size: 12px;\">The region where your Zoho account data reside.</span>",	
             ],
